@@ -1,0 +1,21 @@
+<div class="container" id="chatContainer">
+  <table class="table">
+    <tbody>
+      <tr *ngFor="let item of messages">
+        <td>{{ item.name }}</td>
+        <td>{{ item.text }}</td>
+        <td>{{ item.time | date:"HH:mm:ss" }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="container">
+  <form (ngSubmit)="send()">
+    <div class="input-group mb-3">
+      <input [(ngModel)]="message" [ngModelOptions]="{standalone: true}" type="text" class="form-control" placeholder="Enter the message" aria-label="Message" aria-describedby="button-send">
+      <div class="input-group-append">
+        <button [disabled]="message == null || message == ''" class="btn btn-outline-secondary" type="submit" id="button-send">Send</button>
+      </div>
+    </div>
+  </form>
+</div>
