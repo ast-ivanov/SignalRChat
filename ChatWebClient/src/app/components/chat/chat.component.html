@@ -1,4 +1,8 @@
-<div class="container" id="chatContainer">
+<form [formGroup]="messageForm" (ngSubmit)="send()">
+  <label>
+    Name:
+    <input type="text" formControlName="name" required>
+  </label>
   <table class="table">
     <tbody>
       <tr *ngFor="let item of messages">
@@ -8,14 +12,10 @@
       </tr>
     </tbody>
   </table>
-</div>
-<div class="container">
-  <form (ngSubmit)="send()">
-    <div class="input-group mb-3">
-      <input [(ngModel)]="message" [ngModelOptions]="{standalone: true}" type="text" class="form-control" placeholder="Enter the message" aria-label="Message" aria-describedby="button-send">
-      <div class="input-group-append">
-        <button [disabled]="message == null || message == ''" class="btn btn-outline-secondary" type="submit" id="button-send">Send</button>
-      </div>
+  <div class="input-group mb-3">
+    <input formControlName="text" type="text" class="form-control" placeholder="Enter the message" aria-label="Message" aria-describedby="button-send" required>
+    <div class="input-group-append">
+      <button [disabled]="!messageForm.valid" class="btn btn-outline-secondary" type="submit" id="button-send">Send</button>
     </div>
-  </form>
-</div>
+  </div>
+</form>

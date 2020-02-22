@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from "@aspnet/signalr";
-import { Observable } from 'rxjs';
+import { Message } from '../models/message';
 
 @Injectable({
   providedIn: 'root'
@@ -19,11 +19,11 @@ export class DataService {
     this.hubConnection.start();
   }
 
-  public onReceived(method: (message: string) => void) {
+  public onReceived(method: (message: Message) => void) {
     this.hubConnection.on('received', method)
   }
 
-  public sendMessage(text: string) {
-    this.hubConnection.invoke("Send", text);
+  public sendMessage(message: Message) {
+    this.hubConnection.invoke("Send", message);
   }
 }
