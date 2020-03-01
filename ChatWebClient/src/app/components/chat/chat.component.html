@@ -1,12 +1,13 @@
 <form [formGroup]="messageForm" (ngSubmit)="send()">
-  <label>
-    Name:
-    <input type="text" formControlName="name" required>
-  </label>
+  <div class="container" formGroupName="user">
+    <select class="custom-select" formControlName="id" required>
+      <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+    </select>
+  </div>
   <table class="table">
     <tbody>
       <tr *ngFor="let item of messages">
-        <td>{{ item.name }}</td>
+        <td>{{ item.user.name }}</td>
         <td>{{ item.text }}</td>
         <td>{{ item.time | date:"HH:mm:ss" }}</td>
       </tr>
