@@ -1,7 +1,7 @@
-﻿using ChatApi.Domain.Entities;
-using ChatApi.Domain.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using ChatApi.Application.Messages.Queries;
+using MediatR;
 
 namespace ChatApi.Controllers
 {
@@ -9,47 +9,19 @@ namespace ChatApi.Controllers
     [ApiController]
     public class ChatController : ControllerBase
     {
-        private readonly IAsyncRepository<Message> messageRepository;
-        private readonly IAsyncRepository<User> userRepository;
+        private readonly IMediator _mediator;
 
-        public ChatController(IAsyncRepository<Message> messageRepository,
-                              IAsyncRepository<User> userRepository)
+        public ChatController(IMediator mediator)
         {
-            this.messageRepository = messageRepository;
-            this.userRepository = userRepository;
+            _mediator = mediator;
         }
 
         [HttpGet("[action]")]
-        public async Task<Message[]> GetMessages()
+        public async Task<ActionResult<MessagesListViewModel>> GetMessages()
         {
-            var messages = await messageRepository.GetAsync().ConfigureAwait(false);
+            var messagesListViewModel = await _mediator.Send(new GetAllMessagesQuery()).ConfigureAwait(false);
 
-            return messages;
-        }
-
-        [HttpGet("[action]")]
-        public async Task<User[]> GetUsers()
-        {
-            var users = await userRepository.GetAsync().ConfigureAwait(false);
-
-            return users;
-        }
-
-        [HttpPut("[action]")]
-        public async Task<ActionResult> CreateUser(User user)
-        {
-            var newUser = await userRepository.InsertAsync(user).ConfigureAwait(false);
-
-            return Ok(newUser);
-        }
-
-        //todo Удалить
-        [HttpPut("[action]")]
-        public async Task<ActionResult> CreateMessage(Message message)
-        {
-            var newMessage = await messageRepository.InsertAsync(message).ConfigureAwait(false);
-
-            return Ok(newMessage);
+            return Ok(messagesListViewModel);
         }
     }
 }

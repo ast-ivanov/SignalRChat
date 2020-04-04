@@ -14,5 +14,10 @@
         /// User name
         /// </summary>
         public string Name { get; set; } = default!;
+
+        /// <summary>
+        /// Password
+        /// </summary>
+        public string Password { get; set; }
     }
 }

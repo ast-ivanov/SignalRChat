@@ -1,3 +1,5 @@
+using System.Reflection;
+using ChatApi.Application.Users.Commands;
 using ChatApi.Domain.Entities;
 using ChatApi.Domain.Services;
 using ChatApi.Domain.Services.Impl;
@@ -6,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MediatR;
 
 namespace ChatApi
 {
@@ -18,12 +21,15 @@ namespace ChatApi
             services.AddSingleton<IValidationService, ValidationService>();
             services.AddSingleton<IAsyncRepository<User>, UserRepository>();
             services.AddSingleton<IAsyncRepository<Message>, MessageRepository>();
+            services.AddSingleton<IUserManager, UserManager>();
 
+            services.AddMediatR(typeof(RegisterCommand).GetTypeInfo().Assembly);
             services.AddSignalR();
             services.AddCors(opt => opt.AddPolicy("ChatPolicy", builder => builder.AllowAnyHeader()
                                                                                   .AllowAnyMethod()
                                                                                   .AllowCredentials()
-                                                                                  .WithOrigins("http://localhost:4200")));
+                                                                                  .WithOrigins(
+                                                                                       "http://localhost:4200")));
 
             services.AddControllers();
         }
@@ -41,10 +47,10 @@ namespace ChatApi
             app.UseCors("ChatPolicy");
 
             app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHub<ChatHub>("/chat");
-                endpoints.MapControllers();
-            });
+                             {
+                                 endpoints.MapHub<ChatHub>("/chat");
+                                 endpoints.MapControllers();
+                             });
         }
     }
 }

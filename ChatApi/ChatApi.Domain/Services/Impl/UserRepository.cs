@@ -1,15 +1,18 @@
-﻿using ChatApi.Domain.Entities;
+﻿using System;
+using System.Data;
+using ChatApi.Domain.Entities;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using ChatApi.Domain.Constants;
 
 namespace ChatApi.Domain.Services.Impl
 {
     public class UserRepository : IAsyncRepository<User>
     {
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
         public UserRepository(IConfiguration configuration)
         {
@@ -45,13 +48,32 @@ namespace ChatApi.Domain.Services.Impl
         {
             using var dbConnection = GetConnection();
 
-            var sql = "INSERT INTO Users (Name) VALUES(@Name); SELECT CAST(SCOPE_IDENTITY() as int)";
+            var sql = @$"
+DECLARE @CreatedId int
+DECLARE @ErrorNumber int
 
-            var ids = await dbConnection.QueryAsync<int>(sql, entity);
+EXECUTE [dbo].[InsertUserSP]
+   {entity.Name}
+  ,{entity.Password}
+  ,@CreatedId OUTPUT
+  ,@ErrorNumber OUTPUT
 
-            entity.Id = ids.Single();
+SELECT @CreatedId AS CreatedId, @ErrorNumber AS ErrorNumber";
 
-            return entity;
+            var result = await dbConnection.QuerySingleAsync(sql);
+
+            if (result.ErrorNumber == null)
+            {
+                entity.Id = result.CreatedId;
+                return entity;
+            }
+
+            if (result.ErrorNumber == DbErrorNumbers.DuplicateKey)
+            {
+                throw new DuplicateNameException();
+            }
+
+            throw new Exception();
         }
 
         public async Task UpdateAsync(User entity)
