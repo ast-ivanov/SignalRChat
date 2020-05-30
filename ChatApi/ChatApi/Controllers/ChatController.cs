@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ChatApi.Application.Messages.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ChatApi.Controllers
 {
@@ -17,6 +18,7 @@ namespace ChatApi.Controllers
         }
 
         [HttpGet("[action]")]
+        [Authorize]
         public async Task<ActionResult<MessagesListViewModel>> GetMessages()
         {
             var messagesListViewModel = await _mediator.Send(new GetAllMessagesQuery()).ConfigureAwait(false);

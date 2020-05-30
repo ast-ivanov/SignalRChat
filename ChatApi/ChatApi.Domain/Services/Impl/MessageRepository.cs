@@ -32,8 +32,8 @@ namespace ChatApi.Domain.Services.Impl
             using var dbConnection = GetConnection();
 
             string Sql = @"
-SELECT m.Id, m.Text, m.Time, u.Id, u.Name FROM Messages m
-JOIN Users u ON u.Id = m.UserId";
+SELECT m.Id, m.Text, m.Time, u.Id, u.UserName FROM Messages m
+JOIN AspNetUsers u ON u.Id = m.UserId";
 
             var messages = await dbConnection.QueryAsync<Message, User, Message>(Sql, (m, u) =>
             {
@@ -50,8 +50,8 @@ JOIN Users u ON u.Id = m.UserId";
             using var dbConnection = GetConnection();
 
             string Sql = @"
-SELECT m.Id, m.Text, m.Time, u.Id, u.Name FROM Messages m
-JOIN Users u ON u.Id = m.UserId
+SELECT m.Id, m.Text, m.Time, u.Id, u.UserName FROM Messages m
+JOIN AspNetUsers u ON u.Id = m.UserId
 WHERE m.Id = @id";
 
             var messages = await dbConnection.QueryAsync<Message, User, Message>(Sql, (m, u) =>

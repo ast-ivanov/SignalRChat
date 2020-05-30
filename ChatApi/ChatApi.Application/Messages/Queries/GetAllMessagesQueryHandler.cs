@@ -34,7 +34,7 @@ namespace ChatApi.Application.Messages.Queries
                     User = new UserChatDto
                     {
                         Id = m.User.Id,
-                        Name = m.User.Name
+                        UserName = m.User.UserName
                     }
                 }).ToArray();
 

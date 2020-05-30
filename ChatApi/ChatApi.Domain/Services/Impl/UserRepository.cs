@@ -21,6 +21,7 @@ namespace ChatApi.Domain.Services.Impl
 
         public async Task DeleteAsync(User entity)
         {
+            throw new NotImplementedException();
             using var dbConnection = GetConnection();
 
             await dbConnection.ExecuteAsync("DELETE FROM Users WHERE Id = @Id", new { entity.Id });
@@ -28,6 +29,7 @@ namespace ChatApi.Domain.Services.Impl
 
         public async Task<User[]> GetAsync()
         {
+            throw new NotImplementedException();
             using var dbConnection = GetConnection();
 
             var users = await dbConnection.QueryAsync<User>("SELECT * FROM Users");
@@ -37,6 +39,7 @@ namespace ChatApi.Domain.Services.Impl
 
         public async Task<User> GetAsync(object id)
         {
+            throw new NotImplementedException();
             using var dbConnection = GetConnection();
 
             var users = await dbConnection.QueryAsync<User>("SELECT * FROM Users WHERE Id = @id", new { id });
@@ -46,6 +49,8 @@ namespace ChatApi.Domain.Services.Impl
 
         public async Task<User> InsertAsync(User entity)
         {
+            throw new NotImplementedException();
+            /*
             using var dbConnection = GetConnection();
 
             var sql = @$"
@@ -74,6 +79,7 @@ SELECT @CreatedId AS CreatedId, @ErrorNumber AS ErrorNumber";
             }
 
             throw new Exception();
+        */
         }
 
         public async Task UpdateAsync(User entity)

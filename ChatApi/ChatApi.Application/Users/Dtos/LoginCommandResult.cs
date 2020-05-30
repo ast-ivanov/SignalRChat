@@ -2,10 +2,10 @@
 {
     public class LoginCommandResult
     {
-        public bool Success { get; set; }
+        public bool Succeeded { get; set; }
 
         public string ErrorMessage { get; set; }
 
-        public UserChatDto User { get; set; }
+        public string Token { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace ChatApi.Application.Messages.Commands
         /// <summary>
         /// User identifier
         /// </summary>
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         /// <summary>
         /// Create message command handler

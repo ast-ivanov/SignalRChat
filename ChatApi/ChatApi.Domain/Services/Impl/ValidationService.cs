@@ -1,4 +1,5 @@
-﻿using ChatApi.Domain.Entities;
+﻿using System;
+using ChatApi.Domain.Entities;
 
 namespace ChatApi.Domain.Services.Impl
 {
@@ -7,6 +8,8 @@ namespace ChatApi.Domain.Services.Impl
     {
         public (bool Success, string? Error) ValidateMessage(Message message)
         {
+            throw new NotImplementedException();
+            /*
             if (message.User is null)
             {
                 return (false, "User is empty");
@@ -23,6 +26,7 @@ namespace ChatApi.Domain.Services.Impl
             }
 
             return (true, null);
+            */
         }
     }
 }
