@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using ChatApi.Application.Messages.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using ChatApi.Application.Users.Dtos;
+using System.Linq;
+using System.Security.Claims;
 
 namespace ChatApi.Controllers
 {
@@ -15,6 +18,20 @@ namespace ChatApi.Controllers
         public ChatController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet("[action]")]
+        [Authorize]
+        public ActionResult<UserChatDto> GetCurrentUser()
+        {
+            var userId = User.Claims.First(c => c.Type == "UserID").Value;
+            var userName = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+
+            return Ok(new UserChatDto
+            {
+                Id = userId,
+                UserName = userName
+            });
         }
 
         [HttpGet("[action]")]

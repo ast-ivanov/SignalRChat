@@ -1,5 +1,4 @@
 ﻿using ChatApi.Domain.Entities;
-using ChatApi.Domain.Models.Exceptions;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -12,12 +11,10 @@ namespace ChatApi.Domain.Services.Impl
     public class MessageRepository : IAsyncRepository<Message>
     {
         private readonly IConfiguration _configuration;
-        private readonly IValidationService _validationService;
 
-        public MessageRepository(IConfiguration configuration, IValidationService validationService)
+        public MessageRepository(IConfiguration configuration)
         {
             _configuration = configuration;
-            _validationService = validationService;
         }
 
         public async Task DeleteAsync(Message entity)
@@ -67,13 +64,6 @@ WHERE m.Id = @id";
 
         public async Task<Message> InsertAsync(Message entity)
         {
-            var (success, error) = _validationService.ValidateMessage(entity);
-
-            if (!success)
-            {
-                throw new ValidationException(error!);
-            }
-
             using var dbConnection = GetConnection();
 
             var sql = @"
@@ -97,13 +87,6 @@ VALUES(@Text, @Time, @User)";
 
         public async Task UpdateAsync(Message entity)
         {
-            var (success, error) = _validationService.ValidateMessage(entity);
-
-            if (!success)
-            {
-                throw new ValidationException(error!);
-            }
-
             using var dbConnection = GetConnection();
             
             var message = new

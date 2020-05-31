@@ -36,9 +36,7 @@ namespace ChatApi
             services.Configure<ApplicationSettings>(settingsSection);
 
             services.AddSingleton<IValidationService, ValidationService>();
-            services.AddSingleton<IAsyncRepository<User>, UserRepository>();
             services.AddSingleton<IAsyncRepository<Message>, MessageRepository>();
-            services.AddSingleton<IUserManager, UserManager>();
 
             services.AddDbContext<ChatDbContext>(optionsBuilder =>
                                                {

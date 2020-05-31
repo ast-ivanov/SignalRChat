@@ -16,7 +16,7 @@ namespace ChatApi.Application.Users.Commands
 {
     public class LoginCommand : IRequest<LoginCommandResult>
     {
-        public string Name { get; set; }
+        public string UserName { get; set; }
 
         public string Password { get; set; }
 
@@ -33,7 +33,7 @@ namespace ChatApi.Application.Users.Commands
 
             public async Task<LoginCommandResult> Handle(LoginCommand loginCommand, CancellationToken cancellationToken)
             {
-                var user = await _userManager.FindByNameAsync(loginCommand.Name);
+                var user = await _userManager.FindByNameAsync(loginCommand.UserName);
 
                 if (user == null || !await _userManager.CheckPasswordAsync(user, loginCommand.Password))
                 {
@@ -49,7 +49,8 @@ namespace ChatApi.Application.Users.Commands
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim("UserID", user.Id)
+                        new Claim("UserID", user.Id),
+                        new Claim(ClaimTypes.Name, user.UserName)
                     }),
                     Expires = DateTime.UtcNow.AddDays(_settings.TokenLifeSpanInDays),
                     SigningCredentials = new SigningCredentials(

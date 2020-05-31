@@ -15,16 +15,9 @@ namespace ChatApi.Hubs
             _mediator = mediator;
         }
 
-        public async Task Send(MessageDto message)
+        public async Task Send(CreateMessageCommand createMessageCommand)
         {
-            var createMessageCommand = new CreateMessageCommand
-            {
-                Text = message.Text,
-                Time = message.Time,
-                UserId = message.User.Id
-            };
-
-            message.Id = await _mediator.Send(createMessageCommand).ConfigureAwait(false);
+            var message = await _mediator.Send(createMessageCommand).ConfigureAwait(false);
 
             await Clients.All.SendAsync("received", message).ConfigureAwait(false);
         }
