@@ -1,22 +1,20 @@
-<form [formGroup]="messageForm" (ngSubmit)="send()">
-  <div class="container" formGroupName="user">
-    <select class="custom-select" formControlName="id" required>
-      <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
-    </select>
-  </div>
-  <table class="table">
-    <tbody>
-      <tr *ngFor="let item of messages">
-        <td>{{ item.user.name }}</td>
-        <td>{{ item.text }}</td>
-        <td>{{ item.time | date:"HH:mm:ss" }}</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="container" *ngIf="user != null">
+  <input readonly="true" [(ngModel)]="user.userName">
+</div>
+<table class="table">
+  <tbody>
+    <tr *ngFor="let item of messages">
+      <td>{{ item.user.userName }}</td>
+      <td>{{ item.text }}</td>
+      <td>{{ item.time | date:"HH:mm:ss" }}</td>
+    </tr>
+  </tbody>
+</table>
+<form class="mb-4" autocomplete="off" (submit)="send()">
   <div class="input-group mb-3">
-    <input formControlName="text" type="text" class="form-control" placeholder="Enter the message" aria-label="Message" aria-describedby="button-send" required>
+    <input name="text" [(ngModel)]="text" class="form-control" placeholder="Enter the message" aria-label="Message" aria-describedby="button-send" required>
     <div class="input-group-append">
-      <button [disabled]="!messageForm.valid" class="btn btn-outline-secondary" type="submit" id="button-send">Send</button>
+      <button class="btn btn-outline-secondary" type="submit" id="button-send">Send</button>
     </div>
   </div>
 </form>

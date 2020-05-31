@@ -13,25 +13,20 @@ export class ChatComponent implements OnInit {
 
   constructor(private dataService: DataService) { }
 
-  messageForm = new FormGroup({
-    user: new FormGroup({
-      id: new FormControl()
-    }),
-    text: new FormControl()
-  });
+  user: User
 
-  users: User[];
+  text: string
 
-  messages: Message[];
+  messages: Message[]
 
   ngOnInit() {
     this.dataService.startConnection();
     this.dataService.onReceived(this.onReceived.bind(this));
-    this.dataService.getMessages().subscribe(messages => {
-      this.messages = messages;
-    });
-    this.dataService.getUsers().subscribe(users => {
-      this.users = users;
+    this.dataService.getCurrentUser().subscribe(user => {
+      this.user = user;
+    })
+    this.dataService.getMessages().subscribe(response => {
+      this.messages = response.messages;
     });
   }
 
@@ -40,11 +35,12 @@ export class ChatComponent implements OnInit {
   }
 
   public send(): void {
-    let message = this.messageForm.value;
-    message.time = new Date();
-    message.user.id = Number.parseInt(message.user.id);
-    message.user.name = this.users.find(u => u.id == message.user.id).name;
+    let message = {
+      text: this.text,
+      time: new Date(),
+      user: this.user
+    };
     this.dataService.sendMessage(message);
-    this.messageForm.get('text').reset();
+    this.text = '';
   }
 }

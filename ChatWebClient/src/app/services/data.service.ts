@@ -12,16 +12,16 @@ export class DataService {
 
   constructor(private httpClient: HttpClient) { }
 
-  private readonly baseUri: string = 'https://localhost:44389/api/';
+  private readonly BaseUrl: string = 'https://localhost:44389/api';
 
   private hubConnection: HubConnection;
 
-  public getMessages(): Observable<Message[]> {
-    return this.httpClient.get<Message[]>(`${this.baseUri}chat/getmessages`);
+  public getMessages(): Observable<any> {
+    return this.httpClient.get(`${this.BaseUrl}/chat/getmessages`);
   }
 
-  public getUsers(): Observable<User[]> {
-    return this.httpClient.get<User[]>(`${this.baseUri}chat/getusers`);
+  public getCurrentUser(): Observable<User> {
+    return this.httpClient.get<User>(`${this.BaseUrl}/chat/getcurrentuser`);
   }
 
   public startConnection(): void {
@@ -36,7 +36,7 @@ export class DataService {
     this.hubConnection.on('received', method);
   }
 
-  public sendMessage(message: Message) {
+  public sendMessage(message: any) {
     this.hubConnection.invoke("Send", message);
   }
 }
